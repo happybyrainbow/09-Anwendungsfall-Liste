@@ -90,6 +90,9 @@ public class List<ContentType> {
      */
     public boolean isEmpty() {
         //TODO 01a: Die Liste ist leer, wenn es kein erstes Element gibt.
+        if(first == null){
+            return true;
+        }
         return false;
     }
 
@@ -101,7 +104,10 @@ public class List<ContentType> {
      */
     public boolean hasAccess() {
         //TODO 01b: Es gibt keinen Zugriff, wenn current auf kein Element verweist.
-        return false;
+        if(current == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -121,6 +127,9 @@ public class List<ContentType> {
      */
     public void toFirst() {
         //TODO 01d: Sprung zur ersten Node
+        if(!isEmpty()){
+            first = current;
+        }
     }
 
     /**
@@ -129,6 +138,9 @@ public class List<ContentType> {
      */
     public void toLast() {
         //TODO 01e: Sprung auf die letzte Node
+        if(!isEmpty()){
+            last = current;
+        }
     }
 
     /**
@@ -141,6 +153,9 @@ public class List<ContentType> {
      */
     public ContentType getContent() {
         //TODO 01f: Element zurückgeben
+        if(hasAccess()){
+            return current.getContentObject();
+        }
         return null;
     }
 
@@ -153,8 +168,11 @@ public class List<ContentType> {
      *            das zu schreibende Objekt vom Typ ContentType
      */
     public void setContent(ContentType pContent) {
-        // Nichts tun, wenn es keinen Inhalt oder kein aktuelles Element gibt.
+        // Nichts tun, wenn es keinen Inhalt oder kein aktuelles Element gibt
         //TODO 01g: Inhaltsobjekt ersetzen
+        if(hasAccess() && pContent != null){
+            current.setContentObject(pContent);
+        }
     }
 
     /**
@@ -228,7 +246,14 @@ public class List<ContentType> {
      */
     private ListNode getPrevious(ListNode pNode) {
         //TODO 01l: Vorgänger-Node der aktuellen Node liefern.
-        return null;
+        if(isEmpty() || pNode == null || pNode == first) {
+            return null;
+        }
+        ListNode previousNode = first;
+        while (previousNode.getNextNode() != pNode) {
+            previousNode = previousNode.next;
+        }
+        return previousNode;
     }
 
 }
