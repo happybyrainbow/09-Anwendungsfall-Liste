@@ -119,6 +119,9 @@ public class List<ContentType> {
      */
     public void next() {
         //TODO 01c: Wechsel auf die nächste Node
+        if(hasAccess()){
+            current = current.getNextNode();
+        }
     }
 
     /**
@@ -128,7 +131,7 @@ public class List<ContentType> {
     public void toFirst() {
         //TODO 01d: Sprung zur ersten Node
         if(!isEmpty()){
-            first = current;
+            current = first;
         }
     }
 
@@ -139,7 +142,7 @@ public class List<ContentType> {
     public void toLast() {
         //TODO 01e: Sprung auf die letzte Node
         if(!isEmpty()){
-            last = current;
+            current = last;
         }
     }
 
@@ -189,6 +192,20 @@ public class List<ContentType> {
      */
     public void insert(ContentType pContent) {
         //TODO 01h: Inhaltsobjekt einfügen
+        if(pContent != null){
+            ListNode node = new ListNode(pContent);
+            if(hasAccess()){
+                if(current == first){
+                    node.setNextNode(first);
+                    first = node;
+                }else{
+                    getPrevious(current).setNextNode(node);
+                    node.setNextNode(current);
+                }
+            }else if(!isEmpty()){
+                append(pContent);
+            }
+        }
     }
 
     /**
@@ -202,7 +219,16 @@ public class List<ContentType> {
      *            das anzuhaengende Objekt vom Typ ContentType
      */
     public void append(ContentType pContent) {
-        //TODO 01i: Inhaltsobjekt anhängen
+        //TODO 01i: Inhaltsobjekt anhängen#
+        if(pContent != null) {
+            ListNode node = new ListNode(pContent);
+            if (!isEmpty()) {
+                first = node;
+            } else {
+                last.setNextNode(node);
+            }
+            last = node;
+        }
     }
 
     /**
@@ -217,6 +243,18 @@ public class List<ContentType> {
      */
     public void concat(List<ContentType> pList) {
         //TODO 01j: eine Liste an eine andere anhängen
+        if(pList!=this && pList!=null && !pList.isEmpty()) {
+            if (isEmpty()) {
+                this.first = pList.first;
+            } else {
+                this.last.setNextNode(pList.first);
+            }
+            this.last = pList.last;
+
+            pList.first = null;
+            pList.current = null;
+            pList.last = null;
+        }
     }
 
     /**
@@ -231,6 +269,22 @@ public class List<ContentType> {
     public void remove() {
         // Nichts tun, wenn es kein aktuelles Element gibt oder die Liste leer ist.
         //TODO 01k: eine Node samt Inhaltsobjekt entfernen
+        if(!isEmpty() && hasAccess()) {
+            if (current != first) {
+                if (current == last) {
+                    last = getPrevious(current);
+                }
+                getPrevious(current).setNextNode(current.getNextNode());
+                current = getPrevious(current).getNextNode();
+            } else {
+                if (first.next == null) {
+                    last = null;
+                }
+                first = first.next;
+                current = first;
+            }
+        }
+
     }
 
     /**
@@ -246,12 +300,12 @@ public class List<ContentType> {
      */
     private ListNode getPrevious(ListNode pNode) {
         //TODO 01l: Vorgänger-Node der aktuellen Node liefern.
-        if(isEmpty() || pNode == null || pNode == first) {
+        if(isEmpty() || pNode == null || first == pNode) {
             return null;
         }
         ListNode previousNode = first;
-        while (previousNode.getNextNode() != pNode) {
-            previousNode = previousNode.next;
+        while (previousNode != null && previousNode.getNextNode() != pNode) {
+            previousNode = previousNode.getNextNode();
         }
         return previousNode;
     }

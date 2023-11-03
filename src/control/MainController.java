@@ -24,8 +24,21 @@ public class MainController {
      */
     public String[] showShelfContent(int index){
         List<File> list = allShelves[index];
+        int count = 0;
         //TODO 03: Ausgabe der Inhalte
-        return new String[]{"Platzhalter00", "Platzhalter01", "Platzhalter02"};
+        while(list.hasAccess()){
+            list.next();
+            count++;
+        }
+        list.toFirst();
+        String output[] = new String[count];
+        for (int i = 0; i < count; i++) {
+            if(list.hasAccess()) {
+                output[i] = list.getContent().getName();
+                list.next();
+            }
+        }
+        return output;
     }
 
     /**
