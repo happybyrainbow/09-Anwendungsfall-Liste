@@ -24,6 +24,10 @@ public class MainController {
      */
     public String[] showShelfContent(int index){
         List<File> list = allShelves[index];
+        if(list.isEmpty()){
+            return new String[0];
+        }
+        list.toFirst();
         int count = 0;
         //TODO 03: Ausgabe der Inhalte
         while(list.hasAccess()){
@@ -59,7 +63,8 @@ public class MainController {
      */
     public boolean appendFromTo(int from, int to){
         //TODO 04: Die Objekte einer Liste an eine andere anhängen und dabei die erste Liste leeren.
-        return false;
+        allShelves[to].concat(allShelves[from]);
+        return true;
     }
 
     /**
@@ -71,7 +76,9 @@ public class MainController {
      */
     public boolean appendANewFile(int index, String name, String phoneNumber){
         //TODO 02: Hinzufügen einer neuen Akte am Ende der Liste.
-        return false;
+        File file = new File(name, phoneNumber);
+        allShelves[index].append(file);
+        return true;
     }
 
     /**
@@ -83,7 +90,10 @@ public class MainController {
      */
     public boolean insertANewFile(int index, String name, String phoneNumber){
         //TODO 08: Einfügen einer neuen Akte an die richtige Stelle innerhalb der Liste.
-        return false;
+        sort(index);
+        allShelves[index].insert(new File(name, phoneNumber));
+        sort(index);
+        return true;
     }
 
     /**
@@ -93,6 +103,29 @@ public class MainController {
      */
     public int[] search(String name){
         //TODO 05: Suchen in einer Liste.
+        int count = 0;
+        for (int i = 0; i < allShelves.length; i++) {
+            List<File> list = allShelves[i];
+
+            if(list.isEmpty()){
+                break;
+            }
+
+            list.toFirst();
+            while(list.hasAccess()){
+                list.next();
+                count++;
+            }
+            list.toFirst();
+
+            for (int j = 0; j < count; j++) {
+                if(allShelves[i].getContent().getName().equals(name)){
+                    return new int[]{i,j};
+                }
+
+            }
+
+        }
         return new int[]{-1,-1};
     }
 
@@ -104,6 +137,12 @@ public class MainController {
      */
     public String[] remove(int shelfIndex, int fileIndex){
         //TODO 06: Entfernen aus einer Liste.
+        allShelves[shelfIndex].toFirst();
+        if(!allShelves[shelfIndex].isEmpty()) {
+            String[] output = new String[]{allShelves[shelfIndex].getContent().getName(), allShelves[shelfIndex].getContent().getName()};
+            allShelves[shelfIndex].remove();
+            return output;
+        }
         return new String[]{"Nicht vorhanden","Nicht vorhanden"};
     }
 
